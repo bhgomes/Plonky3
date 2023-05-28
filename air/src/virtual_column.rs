@@ -4,6 +4,7 @@ use core::ops::Mul;
 use p3_field::{AbstractField, Field};
 
 /// An affine function over columns in a PAIR.
+    #[must_use]
 pub struct VirtualPairCol<F: Field> {
     column_weights: Vec<(PairCol, F)>,
     constant: F,
@@ -25,7 +26,17 @@ impl PairCol {
 }
 
 impl<F: Field> VirtualPairCol<F> {
-    #[must_use]
+    pub fn constant(constant: F) -> Self {
+        Self {
+            column_weights: vec![],
+            constant,
+        }
+    }
+
+    pub fn one() -> Self {
+        Self::constant(F::ONE)
+    }
+
     pub fn single(column: PairCol) -> Self {
         Self {
             column_weights: vec![(column, F::ONE)],
@@ -33,12 +44,10 @@ impl<F: Field> VirtualPairCol<F> {
         }
     }
 
-    #[must_use]
     pub fn single_preprocessed(column: usize) -> Self {
         Self::single(PairCol::Preprocessed(column))
     }
 
-    #[must_use]
     pub fn single_main(column: usize) -> Self {
         Self::single(PairCol::Main(column))
     }
