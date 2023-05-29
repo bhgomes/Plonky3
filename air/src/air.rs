@@ -17,10 +17,10 @@ pub trait AirBuilder: Sized {
     type Expr: AbstractionOf<Self::F>
         + Add<Self::Var, Output = Self::Expr>
         + Sub<Self::Var, Output = Self::Expr>
-        + Mul<Self::Var, Output = Self::Expr>;
+        + Mul<Self::Var, Output = Self::Expr>
+        + From<Self::Var>;
 
-    type Var: Into<Self::Expr>
-        + Copy
+    type Var: Copy
         + Add<Self::F, Output = Self::Expr>
         + Add<Self::Var, Output = Self::Expr>
         + Add<Self::Expr, Output = Self::Expr>
