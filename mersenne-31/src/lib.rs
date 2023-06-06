@@ -24,6 +24,7 @@ pub struct Mersenne31 {
 
 impl Mersenne31 {
     const fn new(value: u32) -> Self {
+        debug_assert!((value >> 31) == 0);
         Self { value }
     }
 }
@@ -38,7 +39,7 @@ impl Eq for Mersenne31 {}
 
 impl Hash for Mersenne31 {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        state.write_u32(self.as_canonical_u32())
+        state.write_u32(self.as_canonical_u32());
     }
 }
 
@@ -134,12 +135,20 @@ impl PrimeField for Mersenne31 {
         Self::new(n)
     }
 
+    /// Convert from `u64`. Undefined behavior if the input is outside the canonical range.
     fn from_canonical_u64(n: u64) -> Self {
-        Self::new(n as u32)
+        Self::new(
+            n.try_into()
+                .expect("Too large to be a canonical Mersenne31 encoding"),
+        )
     }
 
+    /// Convert from `usize`. Undefined behavior if the input is outside the canonical range.
     fn from_canonical_usize(n: usize) -> Self {
-        Self::new(n as u32)
+        Self::new(
+            n.try_into()
+                .expect("Too large to be a canonical Mersenne31 encoding"),
+        )
     }
 
     fn from_wrapped_u32(n: u32) -> Self {
@@ -222,6 +231,7 @@ impl Neg for Mersenne31 {
 impl Mul for Mersenne31 {
     type Output = Self;
 
+    #[allow(clippy::cast_possible_truncation)]
     fn mul(self, rhs: Self) -> Self {
         let prod = u64::from(self.value) * u64::from(rhs.value);
         let prod_lo = (prod as u32) & ((1 << 31) - 1);

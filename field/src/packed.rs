@@ -40,7 +40,7 @@ pub unsafe trait PackedField: AbstractionOf<Self::Scalar>
 
     /// Take interpret two vectors as chunks of `block_len` elements. Unpack and interleave those
     /// chunks. This is best seen with an example. If we have:
-    /// 
+    ///
     /// ```text
     /// A = [x0, y0, x1, y1]
     /// B = [x2, y2, x3, y3]
@@ -99,6 +99,7 @@ pub unsafe trait PackedField: AbstractionOf<Self::Scalar>
         unsafe { slice::from_raw_parts_mut(buf_ptr, n) }
     }
 
+    #[must_use]
     fn doubles(&self) -> Self {
         *self * Self::Scalar::TWO
     }

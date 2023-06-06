@@ -4,7 +4,7 @@ use core::ops::Mul;
 use p3_field::{AbstractField, Field};
 
 /// An affine function over columns in a PAIR.
-    #[must_use]
+#[must_use]
 pub struct VirtualPairCol<F: Field> {
     column_weights: Vec<(PairCol, F)>,
     constant: F,
